@@ -1,4 +1,4 @@
-#include <asm/asm-offsets.h> /* NR_syscalls */
+// #include <asm/asm-offsets.h> /* NR_syscalls */
 
 #include "core.h"
 

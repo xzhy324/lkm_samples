@@ -1,2 +1,2 @@
-/home/xzhy324/projects/mylkm/lkm.o
+/home/xzhy324/lkm_samples/mylkm/lkm.o
 

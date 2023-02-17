@@ -1,5 +1,5 @@
 
-obj-m :=detect.o  
+obj-m :=syscall_hooker.o  
 KERNEL :=/lib/modules/$(shell uname -r)/build 
 PWD :=$(shell pwd)  
 modules:  

@@ -1,4 +1,4 @@
-KDIR:=/usr/src/linux-headers-$(shell uname -r)
+KDIR:=/lib/modules/$(shell uname -r)/build
 # PWD:=$(shell pwd)
  
 # ===================================
