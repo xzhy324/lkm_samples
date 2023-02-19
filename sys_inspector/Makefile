@@ -10,6 +10,7 @@ obj-m := $(SYSINSPECTOR).o
 $(SYSINSPECTOR)-y += $(SRCDIR)/core.o
 $(SYSINSPECTOR)-y += $(SRCDIR)/util.o
 $(SYSINSPECTOR)-y += $(SRCDIR)/syscall_table.o
+$(SYSINSPECTOR)-y += $(SRCDIR)/idt_table.o
 
 HEADERS := $(PWD)/include
 ccflags-y += -I$(HEADERS)

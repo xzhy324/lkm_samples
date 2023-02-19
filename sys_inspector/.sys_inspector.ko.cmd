@@ -1,1 +1,0 @@
-cmd_/home/xzhy324/lkm_samples/sys_inspector/sys_inspector.ko := ld -r -m elf_x86_64 -z noexecstack --build-id=sha1  -T scripts/module.lds -o /home/xzhy324/lkm_samples/sys_inspector/sys_inspector.ko /home/xzhy324/lkm_samples/sys_inspector/sys_inspector.o /home/xzhy324/lkm_samples/sys_inspector/sys_inspector.mod.o;  true

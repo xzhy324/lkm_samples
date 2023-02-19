@@ -1,1 +1,0 @@
-cmd_/home/xzhy324/lkm_samples/sys_inspector/Module.symvers := sed 's/\.ko$$/\.o/' /home/xzhy324/lkm_samples/sys_inspector/modules.order | scripts/mod/modpost -m -a  -o /home/xzhy324/lkm_samples/sys_inspector/Module.symvers -e -i Module.symvers   -T -

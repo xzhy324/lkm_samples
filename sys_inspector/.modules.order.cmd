@@ -1,1 +1,0 @@
-cmd_/home/xzhy324/lkm_samples/sys_inspector/modules.order := {   echo /home/xzhy324/lkm_samples/sys_inspector/sys_inspector.ko; :; } | awk '!x[$$0]++' - > /home/xzhy324/lkm_samples/sys_inspector/modules.order

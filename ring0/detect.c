@@ -1,10 +1,8 @@
-//hello.c
-#include <linux/init.h>  
+//#include <linux/init.h>  
 #include <linux/module.h> 
-//kallsyms_lookup_name
-#include <linux/ftrace.h>
+/*kallsyms_lookup_name*/
 #include <linux/kprobes.h>
-// NR_syscalls, __NR_uname
+/*NR_syscalls, __NR_uname*/
 #include <asm/asm-offsets.h>
 MODULE_LICENSE("GPL"); 
 
@@ -26,16 +24,16 @@ void check_syscalltable(void) {
 
     printk(KERN_ALERT "[detect.ko] syscall_table is at %p", syscall_table);
     printk(KERN_ALERT "[detect.ko] core_kernel_text(addr) is at %p", ckt);
-	printk(KERN_ALERT "[detect.ko] NR_syscalls: %d", NR_syscalls);
-	//printk(KERN_ALERT "[detect.ko] __NR_uname: %d", __NR_uname);
+    printk(KERN_ALERT "[detect.ko] NR_syscalls: %d", NR_syscalls);
+    printk(KERN_ALERT "[detect.ko] [test] ckt(0) is %d", ckt(0x00000000afffffff));
 
     int i;
     unsigned long addr;
     for (i=0; i< NR_syscalls; i++){
         addr = syscall_table[i];
         if (!ckt(addr)) {
-			printk(KERN_ALERT"[detect.ko] syscall[%d] addr:%p lays in ring3!", i, addr);
-		}
+          printk(KERN_ALERT"[detect.ko] syscall[%d] addr:%p lays in ring3!", i, addr);
+        }
     }
 }
 

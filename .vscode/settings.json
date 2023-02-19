@@ -2,6 +2,7 @@
     "files.associations": {
         "*.asm": "mips",
         "module.h": "c",
-        "core.h": "c"
+        "core.h": "c",
+        "util.h": "c"
     }
 }
