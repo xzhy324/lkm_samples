@@ -12,7 +12,7 @@ extern int (*ckt)(unsigned long addr); /* Core Kernel Text */
 void analyze_syscalls(void){
 	int i;
     unsigned long addr;
-    printk("analyzing syscall!");
+    printk("[sys_inspector.ko] analyzing syscall!");
 
     for (i=0; i< NR_syscalls; i++){
         addr = sct[i];
