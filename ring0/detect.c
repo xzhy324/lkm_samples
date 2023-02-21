@@ -19,13 +19,13 @@ void check_syscalltable(void) {
     register_kprobe(&kp);
     kallsyms_lookup_name = (kallsyms_lookup_name_t) kp.addr;
     unregister_kprobe(&kp);
+    printk("[detect.ko] kallsyms_lookup is at %p",kallsyms_lookup_name);
     syscall_table = kallsyms_lookup_name("sys_call_table");
     ckt = kallsyms_lookup_name("core_kernel_text"); 
 
     printk(KERN_ALERT "[detect.ko] syscall_table is at %p", syscall_table);
     printk(KERN_ALERT "[detect.ko] core_kernel_text(addr) is at %p", ckt);
     printk(KERN_ALERT "[detect.ko] NR_syscalls: %d", NR_syscalls);
-    printk(KERN_ALERT "[detect.ko] [test] ckt(0) is %d", ckt(0x00000000afffffff));
 
     int i;
     unsigned long addr;

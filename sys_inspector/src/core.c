@@ -2,6 +2,7 @@
 #include "util.h"
 #include "syscall_table.h"
 #include "idt_table.h"
+#include "module_list.h"
 
 unsigned long *sct = NULL; /* Syscall Table */
 unsigned long *idt = NULL; /* IDT Table*/
@@ -10,7 +11,8 @@ int (*ckt)(unsigned long addr) = NULL; /* Core Kernel Text */
 static void execute_analysis(void) {
     //printk("executing analysis!");
     analyze_syscalls();
-    analyze_idt();
+    //analyze_idt();
+    analyze_modules();
 }
 
 static int init_kernel_syms(void){
