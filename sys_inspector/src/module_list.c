@@ -29,7 +29,7 @@ void analyze_modules(void){
 			if(!find_module1(kobj->mod->name)){
 				printk(KERN_ALERT"Module [%s] hidden.\n", kobj->mod->name);
 			}else {
-				printk("[sys_inspector.ko] Module [%s] passed check", kobj->mod->name);
+				//printk("[sys_inspector.ko] Module [%s] passed check", kobj->mod->name);
 			}
                 
 		}
