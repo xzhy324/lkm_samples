@@ -19,3 +19,4 @@ uninstall:
 
 clean:
 	make -C $(LINUX_KERNEL_PATH) M=$(CURRENT_PATH) clean    #清理模块
+	rm ./fileview

@@ -1,4 +1,3 @@
-
 obj-m :=detect.o  
 KERNEL :=/lib/modules/$(shell uname -r)/build 
 PWD :=$(shell pwd)  
