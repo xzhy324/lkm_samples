@@ -18,8 +18,8 @@ static unsigned long vaddr = 0;
 /*打印页中一些重要参数*/
 static void get_pgtable_macro(void)
 {
-	cr0 = read_cr0();/*读取cr0的值*/
-	cr3 = read_cr3_pa();/*读取cr3的值*/
+	cr0 = read_cr0();	 /*读取cr0的值*/
+	cr3 = read_cr3_pa(); /*读取cr3的值*/
 
 	printk("cr0 = 0x%lx, cr3 = 0x%lx\n", cr0, cr3);
 	/* *_SHIFT宏表示在线性地址中相应字段所能映射地址大小的对数
@@ -61,14 +61,16 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
 		pgd_index(vaddr)打印vaddr在页全局目录的索引
 	*/
 	printk("pgd_val = 0x%lx, pgd_index = %lu\n", pgd_val(*pgd), pgd_index(vaddr));
-	if (pgd_none(*pgd)) {
+	if (pgd_none(*pgd))
+	{
 		printk("not mapped in pgd\n");
 		return -1;
 	}
 	/*p4d由于没有启用，所以目录表项为1，即p4d=pgd*/
 	p4d = p4d_offset(pgd, vaddr);
 	printk("p4d_val = 0x%lx, p4d_index = %lu\n", p4d_val(*p4d), p4d_index(vaddr));
-	if (p4d_none(*p4d)) {
+	if (p4d_none(*p4d))
+	{
 		printk("not mapped in p4d\n");
 		return -1;
 	}
@@ -78,7 +80,8 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
 	*/
 	pud = pud_offset(p4d, vaddr);
 	printk("pud_val = 0x%lx, pud_index = %lu\n", pud_val(*pud), pud_index(vaddr));
-	if (pud_none(*pud)) {
+	if (pud_none(*pud))
+	{
 		printk("not mapped in pud\n");
 		return -1;
 	}
@@ -87,7 +90,8 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
 	*/
 	pmd = pmd_offset(pud, vaddr);
 	printk("pmd_val = 0x%lx, pmd_index = %lu\n", pmd_val(*pmd), pmd_index(vaddr));
-	if (pmd_none(*pmd)) {
+	if (pmd_none(*pmd))
+	{
 		printk("not mapped in pmd\n");
 		return -1;
 	}
@@ -96,7 +100,8 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
 	*/
 	pte = pte_offset_kernel(pmd, vaddr);
 	printk("pte_val = 0x%lx, pte_index = %lu\n", pte_val(*pte), pte_index(vaddr));
-	if (pte_none(*pte)) {
+	if (pte_none(*pte))
+	{
 		printk("not mapped in pte\n");
 		return -1;
 	}
@@ -117,7 +122,8 @@ static int __init v2p_init(void)
 	printk("\n");
 	/*申请一个缺页的页面*/
 	vaddr = __get_free_page(GFP_KERNEL);
-	if (vaddr == 0) {
+	if (vaddr == 0)
+	{
 		printk("__get_free_page failed..\n");
 		return -1;
 	}
