@@ -99,12 +99,11 @@ loff_t my_llseek( struct file *file, loff_t offset, int whence )
 {
     unsigned long   newpos = -1;
 
-    switch( whence )
-            {
-            case 0: newpos = offset; break;                 // SEEK_SET
-            case 1: newpos = file->f_pos + offset; break;   // SEEK_CUR
-            case 2: newpos = dram_size + offset; break;     // SEEK_END
-            }
+    switch( whence ){
+    case 0: newpos = offset; break;                 // SEEK_SET
+    case 1: newpos = file->f_pos + offset; break;   // SEEK_CUR
+    case 2: newpos = dram_size + offset; break;     // SEEK_END
+    }
 
     if (( newpos < 0 )||( newpos > dram_size )) return -EINVAL;
     file->f_pos = newpos;
