@@ -1,6 +1,6 @@
 CONFIG_MODULE_SIG=n
 
-obj-m:=lkm.o
+obj-m:=lkm.o syscall_pa.o
  
 KDIR:=/lib/modules/$(shell uname -r)/build
 PWD:=$(shell pwd)
