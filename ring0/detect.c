@@ -19,12 +19,12 @@ void check_syscalltable(void) {
     register_kprobe(&kp);
     kallsyms_lookup_name = (kallsyms_lookup_name_t) kp.addr;
     unregister_kprobe(&kp);
-    printk("[detect.ko] kallsyms_lookup is at %p",kallsyms_lookup_name);
+    printk("[detect.ko] kallsyms_lookup is at %lx",kallsyms_lookup_name);
     syscall_table = kallsyms_lookup_name("sys_call_table");
     ckt = kallsyms_lookup_name("core_kernel_text"); 
 
-    printk(KERN_ALERT "[detect.ko] syscall_table is at %p", syscall_table);
-    printk(KERN_ALERT "[detect.ko] core_kernel_text(addr) is at %p", ckt);
+    printk(KERN_ALERT "[detect.ko] syscall_table is at %lx", syscall_table);
+    printk(KERN_ALERT "[detect.ko] core_kernel_text(addr) is at %lx", ckt);
     printk(KERN_ALERT "[detect.ko] NR_syscalls: %d", NR_syscalls);
 
     int i;
@@ -32,7 +32,7 @@ void check_syscalltable(void) {
     for (i=0; i< NR_syscalls; i++){
         addr = syscall_table[i];
         if (!ckt(addr)) {
-          printk(KERN_ALERT"[detect.ko] syscall[%d] addr:%p lays in ring3!", i, addr);
+          printk(KERN_ALERT"[detect.ko] syscall[%d] addr:%lx lays in ring3!", i, addr);
         }
     }
 }

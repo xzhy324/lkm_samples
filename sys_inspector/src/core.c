@@ -34,9 +34,9 @@ static int lkm_init(void)
         printk("ERROR: Failed to lookup symbols\n");
         return -1;
     }
-    printk("[sys_inspector.ko] idt_table: %p",idt);
-    printk("[sys_inspector.ko] sys_call_table: %p",sct);
-    printk("[sys_inspector.ko] core_kernel_text(addr): %p",ckt);
+    printk("[sys_inspector.ko] idt_table: %lx",idt);
+    printk("[sys_inspector.ko] sys_call_table: %lx",sct);
+    printk("[sys_inspector.ko] core_kernel_text(addr): %lx",ckt);
     execute_analysis();
     return 0;
 }

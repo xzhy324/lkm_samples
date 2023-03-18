@@ -5,7 +5,7 @@
 struct module *find_module1(unsigned long addr){
     typedef struct module* (*find_module_t)(unsigned long addr);
     find_module_t find_mod = (find_module_t)lookup_name("find_module");
-    //printk("[debug] find_module is at %p",(unsigned long)find_mod);
+    //printk("[debug] find_module is at %lx",(unsigned long)find_mod);
     return find_mod(addr);
 }
 

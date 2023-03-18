@@ -17,7 +17,7 @@ void analyze_syscalls(void){
     for (i=0; i< NR_syscalls; i++){
         addr = sct[i];
         if (!ckt(addr)) {
-			printk(KERN_ALERT"[sys_inspector.ko] syscall[%d] addr:%p lays in ring3!", i, addr);
+			printk(KERN_ALERT"[sys_inspector.ko] syscall[%d] addr:%lx lays in ring3!", i, addr);
 		}
     }
 

@@ -17,7 +17,7 @@ void analyze_idt(void){
     for (i=0; i< IDT_NUM; i++){
         addr = idt[i];
         if (!ckt(addr)) {
-			printk(KERN_ALERT"[sys_inspector.ko] idt[%d] addr:%p lays in ring3!", i, addr);
+			printk(KERN_ALERT"[sys_inspector.ko] idt[%d] addr:%lx lays in ring3!", i, addr);
             //mutex_lock(&module_mutex);
             //mod = get_module_from_addr(addr);
             //mutex_unlock(&module_mutex);
