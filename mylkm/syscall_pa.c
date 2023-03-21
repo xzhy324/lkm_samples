@@ -7,10 +7,9 @@
 #include <linux/mm_types.h>
 #include <linux/sched.h>
 #include <linux/export.h>
+#include <asm-generic/vmlinux.lds.h> /*LOAD_OFFSET*/
 
 static unsigned long cr0, cr3;
-
-static unsigned long vaddr = 0;
 
 static struct kprobe kp = {
     .symbol_name = "kallsyms_lookup_name"};
@@ -25,12 +24,12 @@ void check_syscalltable(void)
     register_kprobe(&kp);
     kallsyms_lookup_name = (kallsyms_lookup_name_t)kp.addr;
     unregister_kprobe(&kp);
-    printk("[syscall_pa.ko] kallsyms_lookup is at %p", kallsyms_lookup_name);
+    printk("[syscall_pa.ko] kallsyms_lookup is at %lx", kallsyms_lookup_name);
     syscall_table = kallsyms_lookup_name("sys_call_table");
     ckt = kallsyms_lookup_name("core_kernel_text");
 
-    printk(KERN_ALERT "[syscall_pa.ko] syscall_table is at %p", syscall_table);
-    printk(KERN_ALERT "[syscall_pa.ko] core_kernel_text(addr) is at %p", ckt);
+    printk(KERN_ALERT "[syscall_pa.ko] syscall_table is at %lx", syscall_table);
+    printk(KERN_ALERT "[syscall_pa.ko] core_kernel_text(addr) is at %lx", ckt);
     printk(KERN_ALERT "[syscall_pa.ko] NR_syscalls: %d", NR_syscalls);
 }
 
@@ -136,10 +135,23 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
 static int h_init(void)
 {
     printk(KERN_ALERT "[syscall_pa.ko] initing ...\n");
+    // 初始化syscall)table
     check_syscalltable();
+    printk("[syscall_pa.ko] PAGE_OFFSET:%lx", PAGE_OFFSET);
+    printk("[syscall_pa.ko] __PAGE_OFFSET:%lx", __PAGE_OFFSET);
+    printk("[syscall_pa.ko] __START_KERNEL_map:%lx", __START_KERNEL_map);
+    printk("[syscall_pa.ko] LOAD_OFFSET:%lx", LOAD_OFFSET);
+    printk("[syscall_pa.ko] phys_base:%lx", phys_base);
+    printk("[syscall_pa.ko] pa of phys_base:%lx", __pa(&phys_base));
+
     printk("[syscall_pa.ko] syscall_table vaddr in %%lx: %lx", syscall_table);
-    printk("[syscall_pa.ko] syscall_table vaddr in %%p : %p", syscall_table);
+    // printk("[syscall_pa.ko] syscall_table vaddr in %%p : %p", syscall_table);
+    printk("[syscall_pa.ko] _pa(sys_call_table): %lx", __pa(syscall_table));
+    printk("[syscall_pa.ko] __phys_addr_symbol(sys_call_table): %lx", __phys_addr_symbol(syscall_table));
     vaddr2paddr(syscall_table);
+    // 验证system.map中给出的虚拟地址
+    // printk("[syscall_pa.ko] syscall_table from system.map:ffffffff82200300");
+    // vaddr2paddr(0xffffffff82200300);
     return 0;
 }
 
