@@ -23,3 +23,36 @@ struct module *get_module_from_addr(unsigned long addr){
     return module_address(addr);
 }
 
+#define BETWEEN_PTR(x, y, z) ( \
+	((uintptr_t)x >= (uintptr_t)y) && \
+	((uintptr_t)x < ((uintptr_t)y+(uintptr_t)z)) \
+)
+
+const char *find_hidden_module(unsigned long addr){
+    //printk("in find_hidden_module:addr:%lx",addr);
+	const char *mod_name = NULL;
+	struct kset *mod_kset;
+	struct kobject *cur, *tmp;
+	struct module_kobject *kobj;
+
+	mod_kset = (void *)lookup_name("module_kset");
+	if (!mod_kset)
+		return NULL;
+
+	list_for_each_entry_safe(cur, tmp, &mod_kset->list, entry){
+		if (!kobject_name(tmp))
+			break;
+
+		kobj = container_of(tmp, struct module_kobject, kobj);
+		if (!kobj || !kobj->mod)
+			continue;
+
+		if (BETWEEN_PTR(addr, kobj->mod->core_layout.base, kobj->mod->core_layout.size)){
+			mod_name = kobj->mod->name;
+		}
+        //printk("%s %lx %lx",kobj->mod->name,kobj->mod->core_layout.base,kobj->mod->core_layout.size);
+
+	}
+
+	return mod_name;
+}

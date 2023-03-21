@@ -12,6 +12,7 @@ $(SYSINSPECTOR)-y += $(SRCDIR)/util.o
 $(SYSINSPECTOR)-y += $(SRCDIR)/syscall_table.o
 $(SYSINSPECTOR)-y += $(SRCDIR)/idt_table.o
 $(SYSINSPECTOR)-y += $(SRCDIR)/module_list.o
+$(SYSINSPECTOR)-y += $(SRCDIR)/network_port.o
 
 HEADERS := $(PWD)/include
 ccflags-y += -I$(HEADERS)

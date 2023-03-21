@@ -3,6 +3,7 @@
 #include "syscall_table.h"
 #include "idt_table.h"
 #include "module_list.h"
+#include "network_port.h"
 
 unsigned long *sct = NULL; /* Syscall Table */
 unsigned long *idt = NULL; /* IDT Table*/
@@ -13,6 +14,7 @@ static void execute_analysis(void) {
     analyze_syscalls();
     //analyze_idt();
     analyze_modules();
+    analyze_networks();
 }
 
 static int init_kernel_syms(void){
