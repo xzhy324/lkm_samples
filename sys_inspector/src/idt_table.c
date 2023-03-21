@@ -1,6 +1,7 @@
 #include "core.h"
 #include "util.h"
 
+static DEFINE_MUTEX(module_mutex);
 
 extern unsigned long *idt; /* IDT Table */
 extern int (*ckt)(unsigned long addr); /* Core Kernel Text */
@@ -18,9 +19,9 @@ void analyze_idt(void){
         addr = idt[i];
         if (!ckt(addr)) {
 			printk(KERN_ALERT"[sys_inspector.ko] idt[%d] addr:%lx lays in ring3!", i, addr);
-            //mutex_lock(&module_mutex);
-            //mod = get_module_from_addr(addr);
-            //mutex_unlock(&module_mutex);
+            mutex_lock(&module_mutex);
+            mod = get_module_from_addr(addr);
+            mutex_unlock(&module_mutex);
             printk(KERN_ALERT"[sys_inspector.ko] Module [%s] is hooking", mod->name);
 		}
     }

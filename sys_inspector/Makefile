@@ -19,11 +19,6 @@ ccflags-y += -I$(HEADERS)
 module:
 	$(MAKE) -C $(KDIR) M=$(PWD) modules
 
-install:
-	cp sys_inspector.ko $(DESTDIR)/
-
-clean: clean-module
-
-clean-module:
+clean: 
 	make -C $(KDIR) M=$(PWD) clean
 

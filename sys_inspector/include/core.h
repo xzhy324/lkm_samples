@@ -5,5 +5,6 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/kallsyms.h>
+#include <linux/mutex.h>
 
 #endif /* CORE_H */
