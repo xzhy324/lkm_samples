@@ -45,22 +45,15 @@ void analyze_networks(void){
 	};
 
 	for (i = 0; i < NUM_NET_ENTRIES; i++){
-		//printk("1");
 		net[i].entry = find_subdir(&init_net.proc_net->subdir, net[i].name);
-		//printk("2");
 		if (!net[i].entry)
 			continue;
-		//printk("3");
 		seq_ops = net[i].entry->seq_ops;
-		//printk("4");
 		proc_dir_ops = net[i].entry->proc_dir_ops;
-		//printk("5");
 		// op_addr[0] = *(unsigned long *)proc_dir_ops->llseek;
 		// op_addr[1] = *(unsigned long *)proc_dir_ops->read;
 		// op_addr[2] = *(unsigned long *)proc_dir_ops->release;
-		//printk("6");
 		op_addr[3] = *(unsigned long *)seq_ops->show;
-		//printk("7");
 		for (j = 3; j < 4; j++){
 			if (!ckt(op_addr[j])){
 				printk("net hooked, %lx",op_addr[j]);
