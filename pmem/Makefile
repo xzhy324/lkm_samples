@@ -12,7 +12,7 @@ install: all
 	sudo insmod addr_v2p.ko
 	sudo mknod /dev/dram c 85 0   #major_dev_id(85) is specified in dram.c
 
-uninstall:
+uninstall:clean
 	sudo rmmod dram.ko
 	sudo rmmod addr_v2p.ko
 	sudo rm /dev/dram

@@ -7,7 +7,6 @@
 #include <linux/mm_types.h>
 #include <linux/sched.h>
 #include <linux/export.h>
-#include <asm-generic/vmlinux.lds.h> /*LOAD_OFFSET*/
 
 static unsigned long cr0, cr3;
 
@@ -140,7 +139,6 @@ static int h_init(void)
     printk("[syscall_pa.ko] PAGE_OFFSET:%lx", PAGE_OFFSET);
     printk("[syscall_pa.ko] __PAGE_OFFSET:%lx", __PAGE_OFFSET);
     printk("[syscall_pa.ko] __START_KERNEL_map:%lx", __START_KERNEL_map);
-    printk("[syscall_pa.ko] LOAD_OFFSET:%lx", LOAD_OFFSET);
     printk("[syscall_pa.ko] phys_base:%lx", phys_base);
     printk("[syscall_pa.ko] pa of phys_base:%lx", __pa(&phys_base));
 
