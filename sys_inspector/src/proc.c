@@ -16,7 +16,7 @@ void analyze_fops(void) {
 	struct file *fp;
 	struct module *mod;
 
-	printk("[sys_inspector] Analyzing /proc File Operations\n");
+	printk("[sys_inspector.ko] Analyzing /proc File Operations...\n");
 
 	fp = filp_open("/proc", O_RDONLY, S_IRUSR);
 	if (IS_ERR(fp)){

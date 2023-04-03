@@ -16,7 +16,7 @@ void analyze_modules(void){
 	struct kobject *cur, *tmp;
 	struct module_kobject *kobj;
 
-    printk("[sys_inspector.ko] analyzing modules...");
+    printk("[sys_inspector.ko] Analyzing modules...");
 	mod_kset = (void *)lookup_name("module_kset");
 	if (!mod_kset)
 		return;

@@ -14,7 +14,7 @@ void analyze_syscalls(void){
     unsigned long addr;
     struct module *mod;
     const char *mod_name;
-    printk("[sys_inspector.ko] analyzing syscall!");
+    printk("[sys_inspector.ko] Analyzing syscall...");
 
     for (i=0; i< NR_syscalls; i++){
         addr = sct[i];

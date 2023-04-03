@@ -19,7 +19,7 @@ void analyze_idt(void){
     unsigned long addr;
     struct module *mod;
     
-    printk("[sys_inspector.ko] analyzing idt_table!");
+    printk("[sys_inspector.ko] Analyzing idt_table...");
     for (i=0; i< IDT_NUM; i++){
         addr = idt[i];//x86架构下，idt表中是中断描述符（门描述符一种）
         if (!ckt(addr)) {

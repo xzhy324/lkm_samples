@@ -34,7 +34,7 @@ struct proc_dir_entry *find_subdir(struct rb_root *tree, const char *str){
 }
 
 void analyze_networks(void){
-    printk("[sys_inspector.ko] analyzing networks...");
+    printk("[sys_inspector.ko] Analyzing networks...");
 	int i, j;
 	unsigned long op_addr[4];
 	const struct module *mod;
@@ -56,7 +56,7 @@ void analyze_networks(void){
 		op_addr[3] = *(unsigned long *)seq_ops->show;
 		for (j = 3; j < 4; j++){
 			if (!ckt(op_addr[j])){
-				printk("net hooked, %lx",op_addr[j]);
+				printk("[sys_inspector.ko] net's seq_ops->show is hooked at %lx",op_addr[j]);
 				mutex_lock(&module_mutex);
 				mod = get_module_from_addr(op_addr[j]);
 				if (mod){

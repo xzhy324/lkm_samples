@@ -37,7 +37,7 @@ static int init_kernel_syms(void){
 static int lkm_init(void)
 {
     printk("================================");
-    printk("[sys_inspector.ko] Sys_inspector: loaded!\n");
+    printk("[sys_inspector.ko] sys_inspector: loaded!\n");
     if (init_kernel_syms() < 0){
         printk("ERROR: Failed to lookup symbols\n");
         return -1;
@@ -52,7 +52,7 @@ static int lkm_init(void)
  
 static void lkm_exit(void)
 {
-    printk("[sys_inspector.ko] Sys_inspector: removed!\n");
+    printk("[sys_inspector.ko] sys_inspector: removed!\n");
     printk("================================");
 }
  
