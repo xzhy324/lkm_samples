@@ -111,6 +111,7 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
 	paddr = page_addr | page_offset;
 	printk("page_addr = %lx, page_offset = %lx\n", page_addr, page_offset);
 	printk("vaddr = %lx, paddr = %lx\n", vaddr, paddr);
+	printk("using __pa(), paddr is %lx\n", __pa(vaddr));
 	return paddr;
 }
 
