@@ -74,7 +74,7 @@ static void search_hooks(const struct nf_hook_entries *e)
         }else {
             char name[KSYM_SYMBOL_LEN];
             sprint_symbol(name, addr);
-            printk("[sys_inspector.ko] netfilter hooks inside kernel text: %s\n",name);
+            printk("[sys_inspector.ko] netfilter lays inside kernel text: %s\n",name);
         }
     }
 }

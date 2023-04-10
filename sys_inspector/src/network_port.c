@@ -56,7 +56,7 @@ void analyze_networks(void){
 		op_addr[3] = *(unsigned long *)seq_ops->show;
 		for (j = 3; j < 4; j++){
 			if (!ckt(op_addr[j])){
-				printk("[sys_inspector.ko] net's seq_ops->show is hooked at %lx",op_addr[j]);
+				printk("[sys_inspector.ko] %s's seq_ops->show is hooked at %lx", net[i].name, op_addr[j]);
 				mutex_lock(&module_mutex);
 				mod = get_module_from_addr(op_addr[j]);
 				if (mod){
