@@ -19,7 +19,7 @@ void analyze_syscalls(void){
     for (i=0; i< NR_syscalls; i++){
         addr = sct[i];
         if (!ckt(addr)) {
-			printk(KERN_ALERT"[sys_inspector.ko] syscall[%d] addr:%lx lays in ring3!", i, addr);
+			printk(KERN_ALERT"[sys_inspector.ko] syscall[%d] addr:%lx is NOT in kernel .text segment!", i, addr);
             mutex_lock(&module_mutex);
             mod = get_module_from_addr(addr);
             if (mod){
