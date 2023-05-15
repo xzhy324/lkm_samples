@@ -12,6 +12,8 @@ extern int (*ckt)(unsigned long addr); /* Core Kernel Text */
 #define nf_entry_dereference(e) \
     rcu_dereference_protected(e, lockdep_is_held(&nf_hook_mutex))
 
+#if LINUX_VERSION_CODE <= KERNEL_VERSION(5, 9, 0)
+
 const char *mod_wl[] = {
     "iptable_nat",
     "iptable_raw",
@@ -21,6 +23,15 @@ const char *mod_wl[] = {
     "nf_defrag_ipv4",
     "nf_conntrack_ipv4",
     "br_netfilter"};
+#else
+const char *mod_wl[] = {
+    "nf_conntrack",
+    "nf_nat",
+    "nf_tables",
+    "ip_tables",
+    "br_netfilter",
+    "nf_defrag_ipv4"};
+#endif
 
 int in_module_whitelist(const char *mod_name)
 {
@@ -54,7 +65,7 @@ static void search_hooks(const struct nf_hook_entries *e)
     for (i = 0; i < e->num_hook_entries; i++)
     {
         addr = (unsigned long)e->hooks[i].hook;
-        if (!ckt(addr))
+        if (!ckt(addr))//位于内核模块区域，应为白名单之一
         {
             mutex_lock(&module_mutex);
             mod = get_module_from_addr(addr);
@@ -71,10 +82,12 @@ static void search_hooks(const struct nf_hook_entries *e)
             }
 
             mutex_unlock(&module_mutex);
-        }else {
+        }
+        else//位于内核代码段，nf_hooks一般不指向该区域。
+        {
             char name[KSYM_SYMBOL_LEN];
-            sprint_symbol(name, addr);
-            printk("[sys_inspector.ko] netfilter lays inside kernel text: %s\n",name);
+            sprint_symbol(name, addr);//试图通过该函数打印出内核代码段的符号名
+            printk("[sys_inspector.ko] netfilter hooks lays inside kernel text: %s\n", name);
         }
     }
 }
