@@ -6,7 +6,9 @@
 #include <linux/mm.h>
 #include <asm-generic/io.h>
 
+#if MUTEX_IS_NOT_PREDEFINED
 static DEFINE_MUTEX(module_mutex);
+#endif
 
 extern unsigned long *idt; /* IDT Table */
 extern int (*ckt)(unsigned long addr); /* Core Kernel Text */

@@ -2,7 +2,9 @@
 #include "util.h"
 #include "module_list.h"
 
+#if MUTEX_IS_NOT_PREDEFINED
 static DEFINE_MUTEX(module_mutex);
+#endif
 
 struct module *find_module1(unsigned long addr){
     typedef struct module* (*find_module_t)(unsigned long addr);

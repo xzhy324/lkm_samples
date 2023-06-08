@@ -8,7 +8,9 @@
 #include <linux/sched.h>
 #endif
 
+#if MUTEX_IS_NOT_PREDEFINED
 static DEFINE_MUTEX(module_mutex);
+#endif
 extern int (*ckt)(unsigned long addr); /* Core Kernel Text */
 
 /* https://elixir.bootlin.com/linux/latest/source/fs/nfsd/vfs.c */

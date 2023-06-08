@@ -4,8 +4,10 @@
 #include "core.h"
 #include "util.h"
 
+#if MUTEX_IS_NOT_PREDEFINED
 static DEFINE_MUTEX(module_mutex);
 static DEFINE_MUTEX(nf_hook_mutex);
+#endif
 
 extern int (*ckt)(unsigned long addr); /* Core Kernel Text */
 
@@ -65,7 +67,7 @@ static void search_hooks(const struct nf_hook_entries *e)
     for (i = 0; i < e->num_hook_entries; i++)
     {
         addr = (unsigned long)e->hooks[i].hook;
-        if (!ckt(addr))//位于内核模块区域，应为白名单之一
+        if (!ckt(addr)) // 位于内核模块区域，应为白名单之一
         {
             mutex_lock(&module_mutex);
             mod = get_module_from_addr(addr);
@@ -83,10 +85,10 @@ static void search_hooks(const struct nf_hook_entries *e)
 
             mutex_unlock(&module_mutex);
         }
-        else//位于内核代码段，nf_hooks一般不指向该区域。
+        else // 位于内核代码段，nf_hooks一般不指向该区域。
         {
             char name[KSYM_SYMBOL_LEN];
-            sprint_symbol(name, addr);//试图通过该函数打印出内核代码段的符号名
+            sprint_symbol(name, addr); // 试图通过该函数打印出内核代码段的符号名
             printk("[sys_inspector.ko] netfilter hooks lays inside kernel text: %s\n", name);
         }
     }

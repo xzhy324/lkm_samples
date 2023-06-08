@@ -3,7 +3,9 @@
 #include "core.h"
 #include "util.h"
 
+#if MUTEX_IS_NOT_PREDEFINED
 static DEFINE_MUTEX(module_mutex);
+#endif
 extern unsigned long *sct; /* Syscall Table */
 extern int (*ckt)(unsigned long addr); /* Core Kernel Text */
 
